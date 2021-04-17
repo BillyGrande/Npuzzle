@@ -56,3 +56,34 @@ class Puzzle:
             print(dtext)
             row += 1
             i += self.n
+
+    def _move(self,zindex,index):
+        self.tiles[zindex] = self.tiles[index]
+        self.tiles[index] = 0
+
+    def move_down(self):
+        zindex = self.tiles.index(0)
+        index = zindex + self.n
+        if index <= self.length-1:
+            self._move(zindex,index)
+
+    def move_up(self):
+        zindex = self.tiles.index(0)
+        index = zindex - self.n
+        if index >= 0:
+            self._move(zindex,index)
+
+
+    def move_right(self):
+        zindex = self.tiles.index(0)
+        index = zindex + 1
+        if (index % self.n) != 0:
+            self._move(zindex,index)
+
+
+    def move_left(self):
+        zindex = self.tiles.index(0)
+        index = zindex - 1
+        if zindex !=0:
+            if (zindex % self.n) != 0:
+                self._move(zindex,index)
