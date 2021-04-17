@@ -1,10 +1,12 @@
 import math
 import functools
+import copy
 
 class Puzzle:
 
     def __init__(self,tiles):
-        self.tiles = tiles
+        self._tiles = tiles
+        self.tiles = copy.deepcopy(self._tiles)
         self.length = len(tiles)
         self.n = int(math.sqrt(self.length))
         self._solveable = (self._permutations() % 2 == 0)
@@ -23,7 +25,7 @@ class Puzzle:
         while i<self.length:
             num = self.tiles[i]
             for x in self.tiles[i:]:
-                if x > num:
+                if num > x:
                     perms +=1
                 i += 1
         if perms == 0: perms = 1
@@ -42,5 +44,15 @@ class Puzzle:
         i = 0
         row = 0
         column = 0
-        while row < n:
+        while row < self.n:
             column = 0
+            text = ""
+            dtext = ""
+            while column < self.n:
+                text = text + str(self.tiles[column+i]) + "|"
+                dtext = dtext + "-+"
+                column +=1
+            print(text[:-1])
+            print(dtext)
+            row += 1
+            i += self.n
