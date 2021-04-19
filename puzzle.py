@@ -9,10 +9,9 @@ class Puzzle:
         self.tiles = copy.deepcopy(self._tiles)
         self.length = len(tiles)
         self.n = int(math.sqrt(self.length))
-        self._solveable = (self._permutations() % 2 == 0)
+        self._solveable = not (self._permutations() % 2 == 0)
         self.fs_tiles = list(range(1,self.length))
         self.fs_tiles.append(0)
-        self.fs = self.final_state()
 
 
     def solveable(self):
@@ -21,8 +20,10 @@ class Puzzle:
     def _permutations(self):
         i = 0
         perms = 0
+        zindex = self.tiles.index(0)
+        self.tiles.remove(0)
 
-        while i<self.length:
+        while i<self.length-1:
             num = self.tiles[i]
             for x in self.tiles[i:]:
                 if num > x:
@@ -30,10 +31,18 @@ class Puzzle:
                 i += 1
         if perms == 0: perms = 1
 
+        self.tiles.insert(zindex,0)
         return perms
 
+    @classmethod
+    def equal_tiles(cls,tiles1,tiles2):
+        if functools.reduce(lambda x, y: x and y, map(lambda n1,n2: n1 == n2,tiles1,tiles2),True):
+            return True
+        else:
+            return False
+
     def final_state(self):
-        if functools.reduce(lambda x, y: x and y, map(lambda n1,n2: n1 == n2,self.tiles,self.fs_tiles),True):
+        if Puzzle.equal_tiles(self.tiles,self.fs_tiles):
             self._solveable = True
             return True
         else:

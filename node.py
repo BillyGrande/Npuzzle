@@ -11,3 +11,4 @@ class Node:
     def equality(cls, node1, node2):
        tiles1 = node1.puzzle.tiles
        tiles2 = node2.puzzle.tiles
+       return Puzzle.equal_tiles(tiles1,tiles2)
