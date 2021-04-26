@@ -9,13 +9,38 @@ class Puzzle:
         self.tiles = copy.deepcopy(self._tiles)
         self.length = len(tiles)
         self.n = int(math.sqrt(self.length))
-        self._solveable = not (self._permutations() % 2 == 0)
+        self._solveable = self._solveable()
         self.fs_tiles = list(range(1,self.length))
         self.fs_tiles.append(0)
 
 
     def solveable(self):
         return self._solveable
+
+    def _solveable(self):
+        perms = self._permutations()
+        if perms == 0:
+            return False
+        else:
+            if self.n % 2 == 1:
+                if perms % 2 == 0:
+                    return True
+                else:
+                    return False
+            else:
+                zindex = self.tiles.index(0)
+                row = (self.n)-(zindex // self.n)
+                if perms % 2 == 0:
+                    if row % 2 == 0:
+                        return False
+                    else:
+                        return True
+                else:
+                    if row % 2 == 0:
+                        return True
+                    else:
+                        return False
+
 
     def _permutations(self):
         i = 0
@@ -28,8 +53,7 @@ class Puzzle:
             for x in self.tiles[i:]:
                 if num > x:
                     perms +=1
-                i += 1
-        if perms == 0: perms = 1
+            i += 1
 
         self.tiles.insert(zindex,0)
         return perms

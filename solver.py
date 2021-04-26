@@ -14,11 +14,12 @@ class Solver:
 
     def bfs(self):
         if self.parent.puzzle.solveable():
+
             node = self.queue[0]
 
             while not node.puzzle.final_state():
-                 #node.puzzle.pretty_print()
-                 #print(10*"-")
+                #node.puzzle.pretty_print()
+                #print(10*"-")
 
                 for vnode in self.visited:
                     if Node.equality(vnode,node):
