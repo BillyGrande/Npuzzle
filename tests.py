@@ -9,6 +9,7 @@ class TestPuzze(unittest.TestCase):
         self.puzzle4f = Puzzle([0,3,1,2])
         self.puzzle4t = Puzzle([0,3,2,1])
         self.puzzle9t = Puzzle([1,3,6,4,0,2,5,8,7])
+        self.puzzlefinal = Puzzle([1,2,3,0])
 
     def test_n(self):
         self.assertEqual(self.puzzle4t.n,2)
@@ -21,6 +22,8 @@ class TestPuzze(unittest.TestCase):
         self.assertTrue(self.puzzle4t.solveable())
         self.assertTrue(self.puzzle9t.solveable())
 
+    def test_final_state(self):
+        self.assertTrue(self.puzzlefinal.final_state())
 
 
 

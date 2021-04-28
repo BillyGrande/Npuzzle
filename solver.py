@@ -1,7 +1,7 @@
 from puzzle import Puzzle
 from node import Node
 import copy
-import  time
+import time
 
 class Solver:
 
@@ -99,31 +99,34 @@ class Solver:
             print(time.process_time()-start)
 
 
-    def _next_moves(self,prev_move):
-        try:
-            return  copy.deepcopy(Solver.moves).remove(prev_move)
-        except ValueError:
-            return copy.deepcopy(Solver.moves)
-
     def _expand(self,node):
         #next_moves = self._next_moves(node.move)
         next_moves = ["up","down","left","right"]
         ogtiles = copy.deepcopy(node.puzzle.tiles)
+        node.puzzle.pretty_print()
         states = []
         for move in next_moves:
-            #print(move)
-            getattr( node.puzzle, "move_"+ move)()
-            node2 = Node(Puzzle(node.puzzle.tiles),node,move)
-            self.queue.append(node2)
-            node.puzzle.tiles = copy.deepcopy(ogtiles)
+            try:
+                getattr( node.puzzle, "move_"+ move)()
+            except ValueError:
+                print(move + " Error")
+                continue
+            else:
+                node2 = Node(Puzzle(node.puzzle.tiles),node,move)
+                self.queue.append(node2)
+                node.puzzle.tiles = copy.deepcopy(ogtiles)
+
 
     def _expand_dfs(self,node):
         next_moves = ["up","down","left","right"]
         ogtiles = copy.deepcopy(node.puzzle.tiles)
         states = []
         for move in next_moves:
-            #print(move)
-            getattr( node.puzzle, "move_"+ move)()
-            node2 = Node(Puzzle(node.puzzle.tiles),node,move)
-            self.queue.insert(0,node2)
-            node.puzzle.tiles = copy.deepcopy(ogtiles)
+            try:
+                getattr( node.puzzle, "move_"+ move)()
+            except ValueError:
+                continue
+            else:
+                node2 = Node(Puzzle(node.puzzle.tiles),node,move)
+                self.queue.insert(0,node2)
+                node.puzzle.tiles = copy.deepcopy(ogtiles)

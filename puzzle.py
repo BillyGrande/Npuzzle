@@ -13,6 +13,8 @@ class Puzzle:
         self.fs_tiles = list(range(1,self.length))
         self.fs_tiles.append(0)
 
+    def __hash__(self):
+        pass
 
     def solveable(self):
         return self._solveable
@@ -99,12 +101,16 @@ class Puzzle:
         index = zindex + self.n
         if index <= self.length-1:
             self._move(zindex,index)
+        else:
+            raise ValueError
 
     def move_up(self):
         zindex = self.tiles.index(0)
         index = zindex - self.n
         if index >= 0:
             self._move(zindex,index)
+        else:
+            raise ValueError
 
 
     def move_right(self):
@@ -112,6 +118,8 @@ class Puzzle:
         index = zindex + 1
         if (index % self.n) != 0:
             self._move(zindex,index)
+        else:
+            raise ValueError
 
 
     def move_left(self):
@@ -120,3 +128,7 @@ class Puzzle:
         if zindex !=0:
             if (zindex % self.n) != 0:
                 self._move(zindex,index)
+            else:
+                raise ValueError
+        else:
+            raise ValueError
