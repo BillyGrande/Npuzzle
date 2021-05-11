@@ -1,11 +1,13 @@
 from puzzle import Puzzle
 from node import Node
 import copy
-import time
+import  time
 
 class Solver:
 
-    moves = ["up","down","left","right"]
+    """
+    O solver χρησιμέυει ώστε να βρούμε την λύση του puzzle
+    """
 
     def __init__(self,puzzle):
         self.puzzle = puzzle
@@ -14,6 +16,13 @@ class Solver:
         self.queue = [self.parent]
 
     def bfs(self):
+        """
+        Η bfs μέθοδος βασίζεται στις λιστες queue και visited.
+        Η  πρώτη επαναληψη θα πάρει το root node από το queue, θα τσεκάρει
+        αν είναι η τελική μορφή. Αν δεν είναι θα το κάνει expand και θα βάλει
+        τα παιδιά στο τέλος της queue. Έπειτα το node θα μπει στα visisted.
+        Συνεχίζεται μέχρι να βρόυμε την λύση.
+        """
         start = time.process_time()
         if self.parent.puzzle.solveable():
 
@@ -58,6 +67,10 @@ class Solver:
 
 
     def dfs(self):
+        """
+        Το ίδιο με τον bfs, αλλά τα παιδιά μπαίνουν στην αρχή της
+        queue.
+        """
         start = time.process_time()
         if self.parent.puzzle.solveable():
 
@@ -99,34 +112,31 @@ class Solver:
             print(time.process_time()-start)
 
 
+    def _next_moves(self,prev_move):
+        try:
+            return  copy.deepcopy(Solver.moves).remove(prev_move)
+        except ValueError:
+            return copy.deepcopy(Solver.moves)
+
     def _expand(self,node):
         #next_moves = self._next_moves(node.move)
         next_moves = ["up","down","left","right"]
         ogtiles = copy.deepcopy(node.puzzle.tiles)
-        node.puzzle.pretty_print()
         states = []
         for move in next_moves:
-            try:
-                getattr( node.puzzle, "move_"+ move)()
-            except ValueError:
-                print(move + " Error")
-                continue
-            else:
-                node2 = Node(Puzzle(node.puzzle.tiles),node,move)
-                self.queue.append(node2)
-                node.puzzle.tiles = copy.deepcopy(ogtiles)
-
+            #print(move)
+            getattr( node.puzzle, "move_"+ move)()
+            node2 = Node(Puzzle(node.puzzle.tiles),node,move)
+            self.queue.append(node2)
+            node.puzzle.tiles = copy.deepcopy(ogtiles)
 
     def _expand_dfs(self,node):
         next_moves = ["up","down","left","right"]
         ogtiles = copy.deepcopy(node.puzzle.tiles)
         states = []
         for move in next_moves:
-            try:
-                getattr( node.puzzle, "move_"+ move)()
-            except ValueError:
-                continue
-            else:
-                node2 = Node(Puzzle(node.puzzle.tiles),node,move)
-                self.queue.insert(0,node2)
-                node.puzzle.tiles = copy.deepcopy(ogtiles)
+            #print(move)
+            getattr( node.puzzle, "move_"+ move)()
+            node2 = Node(Puzzle(node.puzzle.tiles),node,move)
+            self.queue.insert(0,node2)
+            node.puzzle.tiles = copy.deepcopy(ogtiles)

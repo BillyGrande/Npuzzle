@@ -3,6 +3,11 @@ import functools
 import copy
 
 class Puzzle:
+    """
+    Η κλάσση Puzzle, μας βοηθάει στο να αποθηκέυσουμε την κατάσταση
+    του puzzle.
+    Το νούμερο 0 θεωρείται το κενό κουτί.
+    """
 
     def __init__(self,tiles):
         self._tiles = tiles
@@ -13,13 +18,24 @@ class Puzzle:
         self.fs_tiles = list(range(1,self.length))
         self.fs_tiles.append(0)
 
-    def __hash__(self):
-        pass
 
     def solveable(self):
+        """
+        Βρίσκει αν το puzzle είναι επιλύσιμο
+        """
         return self._solveable
 
     def _solveable(self):
+        """
+        Με βάση αυτό το λινκ:
+        https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
+
+        1)If N is odd, then puzzle instance is solvable if number of inversions is even in the input state.
+        2)If N is even, puzzle instance is solvable if
+            *the blank is on an even row counting from the bottom (second-last, fourth-last, etc.) and number of inversions is odd.
+            *the blank is on an odd row counting from the bottom (last, third-last, fifth-last, etc.) and number of inversions is even.
+        3)For all other cases, the puzzle instance is not solvable.
+        """
         perms = self._permutations()
         if perms == 0:
             return False
@@ -45,6 +61,9 @@ class Puzzle:
 
 
     def _permutations(self):
+        """
+        Μετράει τις μεταθέσεις στο αρχικό puzzle
+        """
         i = 0
         perms = 0
         zindex = self.tiles.index(0)
@@ -62,12 +81,18 @@ class Puzzle:
 
     @classmethod
     def equal_tiles(cls,tiles1,tiles2):
+        """
+        Τσεκάρει αν δύο λίστες απο νούμερο είναι ίδιες
+        """
         if functools.reduce(lambda x, y: x and y, map(lambda n1,n2: n1 == n2,tiles1,tiles2),True):
             return True
         else:
             return False
 
     def final_state(self):
+        """
+        Τσεκάρει αν το puzzle βρίσκεται στην τελική μορφή
+        """
         if Puzzle.equal_tiles(self.tiles,self.fs_tiles):
             self._solveable = True
             return True
@@ -75,7 +100,9 @@ class Puzzle:
             return False
 
     def pretty_print(self):
-        pass
+        """
+        Εκτυπώνει όμορφα το puzzle
+        """
         i = 0
         row = 0
         column = 0
@@ -93,6 +120,9 @@ class Puzzle:
             i += self.n
 
     def _move(self,zindex,index):
+        """
+        Χρησιμοποιείται για τις κινήσεις του κενού κουτιού.
+        """
         self.tiles[zindex] = self.tiles[index]
         self.tiles[index] = 0
 
@@ -101,16 +131,12 @@ class Puzzle:
         index = zindex + self.n
         if index <= self.length-1:
             self._move(zindex,index)
-        else:
-            raise ValueError
 
     def move_up(self):
         zindex = self.tiles.index(0)
         index = zindex - self.n
         if index >= 0:
             self._move(zindex,index)
-        else:
-            raise ValueError
 
 
     def move_right(self):
@@ -118,8 +144,6 @@ class Puzzle:
         index = zindex + 1
         if (index % self.n) != 0:
             self._move(zindex,index)
-        else:
-            raise ValueError
 
 
     def move_left(self):
@@ -128,7 +152,3 @@ class Puzzle:
         if zindex !=0:
             if (zindex % self.n) != 0:
                 self._move(zindex,index)
-            else:
-                raise ValueError
-        else:
-            raise ValueError
